@@ -4,6 +4,15 @@
 
 Program ini merupakan program untuk melakukan pengecekan apakah suatu gambar merupakan bangun datar tertentuk atau bukan.
 
+## Prequisites
+
+1. Python 3
+
+## Setup
+
+1. Jalankan ```pip install opencv-python``` untuk menginstall openCV
+2. Jalankan ```pip install clipspy```. Jika muncul pesan error, jalankan ```pip install --only-binary :all: clipspy```
+
 ## How to Use
 
 Jalankan file main.py untuk memulai program. File clp yang ada dapat dilihat pada ```shape-detector.clp```
