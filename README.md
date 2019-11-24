@@ -17,3 +17,4 @@ Program ini merupakan program untuk melakukan pengecekan apakah suatu gambar mer
 
 Jalankan file ```main.py``` untuk memulai program. File clp yang ada dapat dilihat pada ```shape-detector.clp``` dan file clp tersebut juga dapat dijalankan pada ide clp
 Untuk melihat detil dari hasil analisis pada openCV, dapat dilihat dengan menjalankan ```python generate_facts.py```. File yang ingin dianalisis dapat dimasukkan pada folder img
+Untuk menjalankan UI, dapat dijalankan dengan menjalankan main.py pada folder UI
