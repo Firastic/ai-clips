@@ -54,22 +54,15 @@ class Analysis:
 		for fact in self.environment.facts():
 			print(fact)
 		print("Done")
-		self.environment.run(1)
-		for rule in self.environment.activations():
-			print(rule)
-		print("Wat")
-		for fact in self.environment.facts():
-			print(fact)
-		print("Done")
 
 if __name__ == '__main__':
-	analysis = Analysis('../zebra.clp')
+	analysis = Analysis('shape-detector.clp')
 
 	#"./img/segiempat_trapesium_ratakanan.jpg"
 	file_name = input('Masukkan nama file\n')
 	analysis.load_image(file_name)
 	#for rule in environment.activations():
 	#	print(rule)
-	analysis.show_facts()
-	analysis.show_rules()
+	#analysis.show_facts()
+	#analysis.show_rules()
 	analysis.run()

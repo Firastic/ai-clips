@@ -72,7 +72,7 @@ def create_facts(filename):
 
     fact = []
     for i in range(len(vertices)):
-        fact.append([i+1, vertices[i][0], vertices[i][1], angle_array[i], line_array[i]])
+        fact.append(['point', i+1, vertices[i][0], vertices[i][1], angle_array[i], line_array[i]])
     fact.append(['totalPoint', len(vertices)])
     #print(fact)
     return fact
