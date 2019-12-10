@@ -75,4 +75,9 @@ def create_facts(filename):
         fact.append((i+1, vertices[i][0], vertices[i][1], angle_array[i], line_array[i]))
     fact.append(('totalPoint', len(vertices)))
     print(fact)
+    cv2.imshow("Model", img)
+    cv2.waitKey(0)
     return fact
+
+if __name__ == '__main__':
+    create_facts("./img/polygon2.png")
