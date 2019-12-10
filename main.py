@@ -7,7 +7,7 @@ def list_to_fact(fact):
 	for idx, element in enumerate(fact):
 		res += str(element)
 		if(idx != len(fact)-1):
-			res += ", "
+			res += " "
 	res += ')'
 	return res
 
@@ -24,12 +24,22 @@ class Analysis:
 		for fact in self.facts:
 			self.environment.assert_string(list_to_fact(fact))
 
+	def print_rule(self, iteration, rule):
+		print(' '*iteration + rule)
+		self.done[rule] = True
+		for rule in self.rule_list[rule]:
+			if not(self.done[rule]):
+				self.print_rule(iteration+1, rule)
+
 	def hit_rules(self):
-		pass
+		self.done = dict.fromkeys(self.rule_list, False)
+		for rule in self.rule_list:
+			if not(self.done[rule]):
+				self.print_rule(0, rule)
 
 	def matched_facts(self):
 		for fact in self.environment.facts():
-			print(fact)
+			print("f-" + str(fact.index), fact)
 
 	def detection_results(self, source_image_result, detection_image_result):
 		return source_image_result == detection_image_result
@@ -47,13 +57,24 @@ class Analysis:
 		return cv2.imread(filename)
 
 	def run(self):
-		self.environment.run()
-		for rule in self.environment.activations():
-			print(rule)
-		print("Wat")
-		for fact in self.environment.facts():
-			print(fact)
-		print("Done")
+		self.rule_list = dict.fromkeys([self.get_name(rule) for rule in self.environment.activations()], [])
+		while(len([rule for rule in self.environment.activations()])):
+			activations = self.environment.activations()
+			current_rule = next(activations)
+			rule_name = self.get_name(current_rule)
+			self.environment.run(1)
+			self.update_rule_matched(rule_name)
+
+	def get_name(self, rule):
+		return rule.name+' '+rule.__repr__().split(':')[2]
+
+	def update_rule_matched(self, rule_name):
+		if(not(rule_name in self.rule_list.keys())):
+			self.rule_list[rule_name] = []
+		for activation in self.environment.activations():
+			if(not(self.get_name(activation) in self.rule_list.keys())):
+				self.rule_list[self.get_name(activation)] = []
+				self.rule_list[rule_name].append(self.get_name(activation))
 
 if __name__ == '__main__':
 	analysis = Analysis('shape-detector.clp')
@@ -66,3 +87,5 @@ if __name__ == '__main__':
 	#analysis.show_facts()
 	#analysis.show_rules()
 	analysis.run()
+	analysis.matched_facts()
+	analysis.hit_rules()
