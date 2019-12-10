@@ -1,35 +1,75 @@
 from clips import Environment, Symbol
 from generate_facts import *
+import asyncio
 
-def hit_rules():
-	pass
+def list_to_fact(fact):
+	res = '('
+	for idx, element in enumerate(fact):
+		res += str(element)
+		if(idx != len(fact)-1):
+			res += ", "
+	res += ')'
+	return res
 
-def matched_facts():
-	pass
+class Analysis:
+	def __init__(self, clp_file_name):
+		self.initialize_env(clp_file_name)
 
-def detection_results(source_image_result, detection_image_result):
-	return source_image_result == detection_image_result
+	def initialize_env(self, clp_file_name):
+		self.environment = Environment()
+		self.environment.load(clp_file_name)
 
-def show_facts():
-	pass
+	def load_image(self, file_name):
+		self.facts = create_facts(file_name)
+		for fact in self.facts:
+			self.environment.assert_string(list_to_fact(fact))
 
-def show_rules():
-	pass
+	def hit_rules(self):
+		pass
 
-def open_image(filename):
-	return cv2.imread(filename)
+	def matched_facts(self):
+		for fact in self.environment.facts():
+			print(fact)
+
+	def detection_results(self, source_image_result, detection_image_result):
+		return source_image_result == detection_image_result
+
+	def show_facts(self):
+		for fact in self.facts:
+			print(list_to_fact(fact))
+
+	def show_rules(self):
+		for rule in self.environment.rules():
+			print(rule.name)
+
+	def open_image(self, filename):
+		load_image(filename)
+		return cv2.imread(filename)
+
+	def run(self):
+		self.environment.run()
+		for rule in self.environment.activations():
+			print(rule)
+		print("Wat")
+		for fact in self.environment.facts():
+			print(fact)
+		print("Done")
+		self.environment.run(1)
+		for rule in self.environment.activations():
+			print(rule)
+		print("Wat")
+		for fact in self.environment.facts():
+			print(fact)
+		print("Done")
 
 if __name__ == '__main__':
-	environment = Environment()
-
-	# load constructs into the environment
-	environment.load('shape-detector.clp')
+	analysis = Analysis('../zebra.clp')
 
 	#"./img/segiempat_trapesium_ratakanan.jpg"
-	file_name = input('Masukkan nama file')
-	#facts = generate_facts(file_name)
-	#facts = environment.assert_string('(start-it)')
-	#for fact in facts:
-	#	environment.assert_string(fact)
-
-	environment.run()
+	file_name = input('Masukkan nama file\n')
+	analysis.load_image(file_name)
+	#for rule in environment.activations():
+	#	print(rule)
+	analysis.show_facts()
+	analysis.show_rules()
+	analysis.run()

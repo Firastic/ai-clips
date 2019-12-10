@@ -61,22 +61,20 @@ def create_facts(filename):
 
     vertices = get_shape_vertices(img, thresh)
     vertices = convert_to_tuple(vertices)
-    print(vertices)
-    print("Vertices count: ", len(vertices))
+    #print(vertices)
+    #print("Vertices count: ", len(vertices))
 
     angle_array = get_angle(vertices)
-    print(angle_array)
+    #print(angle_array)
 
     line_array = get_line(vertices)
-    print(line_array)
+    #print(line_array)
 
     fact = []
     for i in range(len(vertices)):
-        fact.append((i+1, vertices[i][0], vertices[i][1], angle_array[i], line_array[i]))
-    fact.append(('totalPoint', len(vertices)))
-    print(fact)
-    cv2.imshow("Model", img)
-    cv2.waitKey(0)
+        fact.append([i+1, vertices[i][0], vertices[i][1], angle_array[i], line_array[i]])
+    fact.append(['totalPoint', len(vertices)])
+    #print(fact)
     return fact
 
 if __name__ == '__main__':
