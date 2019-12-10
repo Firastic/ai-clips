@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 import math
+from copy import deepcopy
 
+marked_image = 0
 def is_outer_rectangle(vertices, x, y):
     if(len(vertices) != 8):
         return False
@@ -12,11 +14,14 @@ def is_outer_rectangle(vertices, x, y):
     return True
 
 def get_shape_vertices(img, thresh):
+    global marked_image
     contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
+    marked_image = deepcopy(img)
     for cnt in contours:
         approx = cv2.approxPolyDP(cnt, 0.05*cv2.arcLength(cnt, True), True)
         if(not is_outer_rectangle(approx.flatten(), len(img[0]), len(img))):
+            cv2.drawContours(marked_image, [approx], -1, (0, 255, 0), 2)
+            cv2.imwrite('./temp/marked_image.jpg', marked_image)
             return approx
 
 def convert_to_tuple(vertices):
@@ -60,6 +65,7 @@ def create_facts(filename):
     thresh = cv2.dilate(thresh, None, iterations=2)
 
     vertices = get_shape_vertices(img, thresh)
+    print(vertices)
     vertices = convert_to_tuple(vertices)
     #print(vertices)
     #print("Vertices count: ", len(vertices))

@@ -1,6 +1,7 @@
 from clips import Environment, Symbol
 from generate_facts import *
 import asyncio
+import Image
 
 def list_to_fact(fact):
 	res = '('
@@ -56,6 +57,9 @@ class Analysis:
 		load_image(filename)
 		return cv2.imread(filename)
 
+	def open_result_image(self):
+		return Image.open('./temp/marked_image.jpg')
+
 	def run(self):
 		self.rule_list = dict.fromkeys([self.get_name(rule) for rule in self.environment.activations()], [])
 		while(len([rule for rule in self.environment.activations()])):
@@ -89,3 +93,4 @@ if __name__ == '__main__':
 	analysis.run()
 	analysis.matched_facts()
 	analysis.hit_rules()
+	analysis.open_result_image()
