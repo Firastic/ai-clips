@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 from tkinter import scrolledtext, Menu, filedialog, messagebox
+from analysis import *
 
 def _from_rgb(rgb):
     return "#%02x%02x%02x" % rgb 
@@ -14,6 +15,7 @@ def load_file():
     sourceImg.place(relx = 0.01, rely = 0.05, relwidth = 0.35, relheight = 0.5)
     sourceImg.create_image(20,20, anchor = NW, image=img)
     sourceImg.image = img
+    analysis.load_image(filename)
 
 def displayShape(nameShape):
     filename = '../img/shape/' + nameShape +'.jpg'
@@ -24,6 +26,7 @@ def displayShape(nameShape):
     detectionImg.place(relx = 0.38, rely = 0.05, relwidth = 0.4, relheight = 0.5)
     detectionImg.create_image(0,0, anchor = NW, image=img)
     detectionImg.image = img
+    show_analysis(nameShape)
     
 def displayRule():
     os.system('python showRule.py')
@@ -36,6 +39,29 @@ def ruleEditor():
 
 def callback(event):
     displayShape(shape.selection()[0])
+
+def initialize_analysis():
+    global analysis
+    analysis = Analysis('../shape-detector.clp')
+
+    #analysis.run()
+    #analysis.matched_facts()
+    #analysis.hit_rules()
+    #analysis.open_result_image()
+
+def show_analysis(shape):
+    global analysis, detectionResult, hitRules, matchedFacts
+    analysis.run()
+    insert_text(hitRules, analysis.hit_rules())
+    insert_text(matchedFacts, analysis.matched_facts())
+    insert_text(detectionResult, analysis.detection_results(shape))
+
+def insert_text(frame, message):
+    text = Text(frame)
+    text.tag_config("hasil", font = ("Calibri", 10), justify = 'left')
+    text.insert("1.0", message, "hasil")
+    text.tag_add("center", "1.0", "end")
+    text.pack()
 
 HEIGHT = 560
 WIDTH = 1000
@@ -128,5 +154,7 @@ shape.insert('segienam', 'end', 'segienam_samasisi', text = "Segienam sama sisi"
 shape.pack()
 
 shape.bind('<<TreeviewSelect>>', callback)
+
+initialize_analysis()
 
 root.mainloop()

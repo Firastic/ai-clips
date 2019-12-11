@@ -1,7 +1,6 @@
 from clips import Environment, Symbol
 from generate_facts import *
 import asyncio
-import Image
 
 def list_to_fact(fact):
 	res = '('
@@ -26,39 +25,56 @@ class Analysis:
 			self.environment.assert_string(list_to_fact(fact))
 
 	def print_rule(self, iteration, rule):
-		print(' '*iteration + rule)
+		res = (' '*iteration + rule)
+		res += '\n'
 		self.done[rule] = True
 		for rule in self.rule_list[rule]:
 			if not(self.done[rule]):
-				self.print_rule(iteration+1, rule)
+				res += self.print_rule(iteration+1, rule)
+		return res
 
 	def hit_rules(self):
 		self.done = dict.fromkeys(self.rule_list, False)
+		res = ""
 		for rule in self.rule_list:
 			if not(self.done[rule]):
-				self.print_rule(0, rule)
+				res += self.print_rule(0, rule)
+		print("Hit rules:")
+		print(res)
+		return res
 
 	def matched_facts(self):
+		res = ""
 		for fact in self.environment.facts():
-			print("f-" + str(fact.index), fact)
+			print(fact)
+			res += "f-" + str(fact.index) + " " + str(fact)
+			res += '\n'
+		print("Matched facts:")
+		print(res)
+		return res
 
-	def detection_results(self, source_image_result, detection_image_result):
-		return source_image_result == detection_image_result
+	def detection_results(self, source_image_result):
+		return "True dulu lah ya"
 
 	def show_facts(self):
+		res = ""
 		for fact in self.facts:
-			print(list_to_fact(fact))
+			res += (list_to_fact(fact))
+			res += "\n"
+		print(res)
+		return res
 
 	def show_rules(self):
+		res = ""
 		for rule in self.environment.rules():
-			print(rule.name)
+			res += rule.name
+			res += "\n"
+		print("Rule list:")
+		print(res)
 
 	def open_image(self, filename):
 		load_image(filename)
 		return cv2.imread(filename)
-
-	def open_result_image(self):
-		return Image.open('./temp/marked_image.jpg')
 
 	def run(self):
 		self.rule_list = dict.fromkeys([self.get_name(rule) for rule in self.environment.activations()], [])
