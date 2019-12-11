@@ -20,6 +20,7 @@ class Analysis:
 		self.environment.load(clp_file_name)
 
 	def load_image(self, file_name):
+		self.environment.reset()
 		self.facts = create_facts(file_name)
 		for fact in self.facts:
 			self.environment.assert_string(list_to_fact(fact))

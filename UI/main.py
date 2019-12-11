@@ -5,21 +5,25 @@ from PIL import Image, ImageTk
 from tkinter import scrolledtext, Menu, filedialog, messagebox
 from analysis import *
 
-class FrameModified:
-    def __init__(self, frame, text):
-        self.frame = frame
-        self.text = text
+class TextModified(Text):
+    def setText(self, text):
+        self.clear()
+        self.tag_config("hasil", font = ("Calibri", 10), justify = 'left')
+        self.insert(END, text)
+        self.tag_add("center", "1.0", "end")
+        self.pack()
 
-    def clear_text(self):
-        pass
-        print(self.text['text'])
-        #self.text.delete(1.0, END)
+    def clear(self):
+        self.delete("1.0", END)
+
+class FrameModified:
+    def __init__(self, frame):
+        self.frame = frame
+        self.text = TextModified(frame)
+        self.text.setText("Placeholder")
 
     def insert_text(self, message):
-        self.text.tag_config("hasil", font = ("Calibri", 10), justify = 'left')
-        self.text.insert("1.0", message, "hasil")
-        self.text.tag_add("center", "1.0", "end")
-        self.text.pack()
+        self.text.setText(message)
 
 def _from_rgb(rgb):
     return "#%02x%02x%02x" % rgb
@@ -68,11 +72,10 @@ def initialize_analysis():
 def show_analysis(shape):
     global analysis, detectionResult, hitRules, matchedFacts
     analysis.run()
-    #insert_text(hitRules, analysis.hit_rules())
-    hitRules.clear_text()
     hitRules.insert_text(analysis.hit_rules())
-    insert_text(matchedFacts, analysis.matched_facts())
-    insert_text(detectionResult, analysis.detection_results(shape))
+    matchedFacts.insert_text(analysis.matched_facts())
+    detectionResult.insert_text(analysis.detection_results(shape))
+    print("Shape: ", shape)
 
 def insert_text(frame, message):
     text = Text(frame)
@@ -89,15 +92,17 @@ root = Tk()
 canvas = Canvas(root, height = HEIGHT, width = WIDTH, bg = _from_rgb((230, 230, 230)))
 canvas.pack()
 
-detectionResult = Frame(root,bg = 'white')
-detectionResult.place(relx = 0.01, rely = 0.62, relwidth = 0.315, relheight = 0.44)
+detectionResultFrame = Frame(root,bg = 'white')
+detectionResultFrame.place(relx = 0.01, rely = 0.62, relwidth = 0.315, relheight = 0.44)
+detectionResult = FrameModified(detectionResultFrame)
 
-matchedFacts = Frame(root,bg = 'white')
-matchedFacts.place(relx = 0.343, rely = 0.62, relwidth = 0.315, relheight = 0.4)
+matchedFactsFrame = Frame(root,bg = 'white')
+matchedFactsFrame.place(relx = 0.343, rely = 0.62, relwidth = 0.315, relheight = 0.4)
+matchedFacts = FrameModified(matchedFactsFrame)
 
 hitRulesFrame = Frame(root,bg = 'white')
 hitRulesFrame.place(relx = 0.68, rely = 0.62, relwidth = 0.315, relheight = 0.4)
-hitRules = FrameModified(hitRulesFrame, Text(hitRulesFrame))
+hitRules = FrameModified(hitRulesFrame)
 
 sourceImg = Frame(root,bg = 'white')
 sourceImg.place(relx = 0.01, rely = 0.05, relwidth = 0.35, relheight = 0.5)
@@ -107,12 +112,6 @@ detectionImg.place(relx = 0.38, rely = 0.05, relwidth = 0.4, relheight = 0.5)
 
 frame = Frame(root, bg =_from_rgb((230, 230, 230)))
 frame.place(relx = 0.8, rely = 0.05, relwidth = 0.25, relheight = 0.5)
-
-text = Text(detectionResult)
-text.tag_config("hasil", font = "Arial", justify = 'center')
-text.insert("1.0", "Hello.....", "hasil")
-text.tag_add("center", "1.0", "end")
-text.pack()
 
 label1 = Label(root, text = "Source Image")
 label1.place(relx=0.1, rely=0.0)
