@@ -5,8 +5,24 @@ from PIL import Image, ImageTk
 from tkinter import scrolledtext, Menu, filedialog, messagebox
 from analysis import *
 
+class FrameModified:
+    def __init__(self, frame, text):
+        self.frame = frame
+        self.text = text
+
+    def clear_text(self):
+        pass
+        print(self.text['text'])
+        #self.text.delete(1.0, END)
+
+    def insert_text(self, message):
+        self.text.tag_config("hasil", font = ("Calibri", 10), justify = 'left')
+        self.text.insert("1.0", message, "hasil")
+        self.text.tag_add("center", "1.0", "end")
+        self.text.pack()
+
 def _from_rgb(rgb):
-    return "#%02x%02x%02x" % rgb 
+    return "#%02x%02x%02x" % rgb
 
 def load_file():
     filename  = filedialog.askopenfilename()
@@ -52,12 +68,15 @@ def initialize_analysis():
 def show_analysis(shape):
     global analysis, detectionResult, hitRules, matchedFacts
     analysis.run()
-    insert_text(hitRules, analysis.hit_rules())
+    #insert_text(hitRules, analysis.hit_rules())
+    hitRules.clear_text()
+    hitRules.insert_text(analysis.hit_rules())
     insert_text(matchedFacts, analysis.matched_facts())
     insert_text(detectionResult, analysis.detection_results(shape))
 
 def insert_text(frame, message):
     text = Text(frame)
+    text.pack_forget()
     text.tag_config("hasil", font = ("Calibri", 10), justify = 'left')
     text.insert("1.0", message, "hasil")
     text.tag_add("center", "1.0", "end")
@@ -76,8 +95,9 @@ detectionResult.place(relx = 0.01, rely = 0.62, relwidth = 0.315, relheight = 0.
 matchedFacts = Frame(root,bg = 'white')
 matchedFacts.place(relx = 0.343, rely = 0.62, relwidth = 0.315, relheight = 0.4)
 
-hitRules = Frame(root,bg = 'white')
-hitRules.place(relx = 0.68, rely = 0.62, relwidth = 0.315, relheight = 0.4)
+hitRulesFrame = Frame(root,bg = 'white')
+hitRulesFrame.place(relx = 0.68, rely = 0.62, relwidth = 0.315, relheight = 0.4)
+hitRules = FrameModified(hitRulesFrame, Text(hitRulesFrame))
 
 sourceImg = Frame(root,bg = 'white')
 sourceImg.place(relx = 0.01, rely = 0.05, relwidth = 0.35, relheight = 0.5)
@@ -106,7 +126,7 @@ label3.place(relx=0.1, rely=0.575)
 label4 = Label(root, text = "Matched Fact")
 label4.place(relx=0.457, rely=0.575)
 
-label5 = Label(root, text = "HIt Rules")
+label5 = Label(root, text = "Hit Rules")
 label5.place(relx=0.8, rely=0.575)
 
 openImage = Button(frame, text = "Open Source",command = load_file, width=15, height=1, bg = 'white').place(x=25 ,y=0)
@@ -119,7 +139,7 @@ showFact =Button(frame, text = "Show Fact",command = displayRule,width=15, heigh
 
 frame1 = Frame(root, bg = _from_rgb((230, 230, 230)))
 frame1.place(relx = 0.8, rely = 0.35, relwidth = 0.18, relheight = 0.2)
-        
+
 shape = ttk.Treeview(frame1)
 style = ttk.Style()
 style.configure("Treeview", font=(None, 8))
