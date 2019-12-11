@@ -30,7 +30,9 @@ def _from_rgb(rgb):
 
 def load_file():
     filename  = filedialog.askopenfilename()
-    img = ImageTk.PhotoImage(Image.open(filename))
+    img = Image.open(filename)
+    image = img.resize((int(0.4*WIDTH),int(0.5*HEIGHT)),Image.ANTIALIAS)
+    img=ImageTk.PhotoImage(image)
     sourceImg = Canvas(root)
     sourceImg.place(relx = 0.01, rely = 0.05, relwidth = 0.35, relheight = 0.5)
     sourceImg.create_image(20,20, anchor = NW, image=img)
