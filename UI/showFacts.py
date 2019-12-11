@@ -20,5 +20,6 @@ menu = Menu(root)
     menu.add_cascade(label="File", menu=filemenu)
     filemenu.add_command(label = "exit", command = open_command)
 
+textPad.insert(1.0, "kaakak")
 textPad.pack()
 root.mainloop()
