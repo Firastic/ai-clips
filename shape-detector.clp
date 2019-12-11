@@ -47,7 +47,7 @@
 	(segitiga yes)
    (point ?n ?x ?y ?angle ?l)
    (test (> ?angle 89))
-   (test (> ?angle 91))
+   (test (< ?angle 91))
    =>
 	(assert (segitigaSiku yes))
 )
