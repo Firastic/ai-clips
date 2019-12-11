@@ -36,9 +36,10 @@ def load_file():
     sourceImg.create_image(20,20, anchor = NW, image=img)
     sourceImg.image = img
     analysis.load_image(filename)
+    show_analysis()
 
 def displayShape(nameShape):
-    filename = '../img/shape/' + nameShape +'.jpg'
+    filename = '../temp/marked_image.jpg'
     img = Image.open(filename)
     image = img.resize((int(0.4*WIDTH),int(0.5*HEIGHT)),Image.ANTIALIAS)
     img=ImageTk.PhotoImage(image)
@@ -46,8 +47,8 @@ def displayShape(nameShape):
     detectionImg.place(relx = 0.38, rely = 0.05, relwidth = 0.4, relheight = 0.5)
     detectionImg.create_image(0,0, anchor = NW, image=img)
     detectionImg.image = img
-    show_analysis(nameShape)
-    
+    detectionResult.insert_text(analysis.detection_results(nameShape))
+
 def displayRule():
     os.system('python showRule.py')
 
@@ -64,17 +65,11 @@ def initialize_analysis():
     global analysis
     analysis = Analysis('../shape-detector.clp')
 
-    #analysis.run()
-    #analysis.matched_facts()
-    #analysis.hit_rules()
-    #analysis.open_result_image()
-
-def show_analysis(shape):
+def show_analysis():
     global analysis, detectionResult, hitRules, matchedFacts
     analysis.run()
     hitRules.insert_text(analysis.hit_rules())
     matchedFacts.insert_text(analysis.matched_facts())
-    detectionResult.insert_text(analysis.detection_results(shape))
     print("Shape: ", shape)
 
 def insert_text(frame, message):
@@ -116,7 +111,7 @@ frame.place(relx = 0.8, rely = 0.05, relwidth = 0.25, relheight = 0.5)
 label1 = Label(root, text = "Source Image")
 label1.place(relx=0.1, rely=0.0)
 
-label2 = Label(root, text = "Detection Iamge")
+label2 = Label(root, text = "Detection Image")
 label2.place(relx=0.5, rely=0.0)
 
 label3 = Label(root, text = "Detection Result")

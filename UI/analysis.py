@@ -55,7 +55,11 @@ class Analysis:
 		return res
 
 	def detection_results(self, source_image_result):
+		print("Hasil: ", source_image_result)
 		return "True dulu lah ya"
+
+	def get_result(self):
+		self.get_result = []
 
 	def show_facts(self):
 		res = ""

@@ -21,7 +21,8 @@ def get_shape_vertices(img, thresh):
         approx = cv2.approxPolyDP(cnt, 0.05*cv2.arcLength(cnt, True), True)
         if(not is_outer_rectangle(approx.flatten(), len(img[0]), len(img))):
             cv2.drawContours(marked_image, [approx], -1, (0, 255, 0), 2)
-            cv2.imwrite('./temp/marked_image.jpg', marked_image)
+            print('dah diwrite')
+            cv2.imwrite('../temp/marked_image.jpg', marked_image)
             return approx
 
 def convert_to_tuple(vertices):
@@ -84,4 +85,4 @@ def create_facts(filename):
     return fact
 
 if __name__ == '__main__':
-    create_facts("./img/polygon2.png")
+    create_facts("../img/shape/segiempat.jpg")
