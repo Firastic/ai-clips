@@ -1,6 +1,7 @@
 from clips import Environment, Symbol
 from generate_facts import *
 import asyncio
+import re
 
 def list_to_fact(fact):
 	res = '('
@@ -11,9 +12,14 @@ def list_to_fact(fact):
 	res += ')'
 	return res
 
+def convert(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
 class Analysis:
 	def __init__(self, clp_file_name):
 		self.initialize_env(clp_file_name)
+		self.get_result = []
 
 	def initialize_env(self, clp_file_name):
 		self.environment = Environment()
@@ -21,6 +27,7 @@ class Analysis:
 
 	def load_image(self, file_name):
 		self.environment.reset()
+		self.get_result = []
 		self.facts = create_facts(file_name)
 		for fact in self.facts:
 			self.environment.assert_string(list_to_fact(fact))
@@ -49,17 +56,20 @@ class Analysis:
 		for fact in self.environment.facts():
 			print(fact)
 			res += "f-" + str(fact.index) + " " + str(fact)
+			self.insert_fact(str(fact))
 			res += '\n'
 		print("Matched facts:")
 		print(res)
 		return res
 
+	def insert_fact(self, fact):
+		parsed_fact = fact.split(' ')
+		self.get_result.append(convert(parsed_fact[0][1:]))
+
 	def detection_results(self, source_image_result):
 		print("Hasil: ", source_image_result)
-		return "True dulu lah ya"
-
-	def get_result(self):
-		self.get_result = []
+		print(self.get_result)
+		return "True" if (source_image_result in self.get_result) else "False"
 
 	def show_facts(self):
 		res = ""
